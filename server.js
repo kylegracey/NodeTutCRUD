@@ -12,8 +12,9 @@ MongoClient.connect('mongodb://nodetut:cruduser@ds129281.mlab.com:29281/nodetutc
 })
 
 app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
 app.set('view engine', 'ejs')
-
+app.use(express.static('public'))
 
 app.get('/', (req, res) => {
   db.collection('quotes').find().toArray((err, results) => {
@@ -31,4 +32,21 @@ app.post('/quotes', (req, res) => {
     console.log('saved to database')
     res.redirect('/')
   })
+})
+
+app.put('/quotes', (req, res) => {
+  //Handle put request
+  db.collection('quotes').findOneAndUpdate(
+    { name: 'Yoda' }, {
+      $set: {
+        name: req.body.name,
+        quote: req.body.quote
+      }
+    }, {
+      sort: {_id:-1},
+      upsert: true
+    }, (err, result) => {
+      if (err) return res.send(err)
+      res.send(result)
+    })
 })
