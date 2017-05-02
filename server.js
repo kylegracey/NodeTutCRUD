@@ -15,6 +15,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
+  db.collection('quotes').find().toArray(function(err, results){
+    console.log(results);
+  })
+
 })
 
 app.post('/quotes', (req, res) => {
