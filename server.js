@@ -11,12 +11,15 @@ MongoClient.connect('mongodb://nodetut:cruduser@ds129281.mlab.com:29281/nodetutc
   })
 })
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}))
+app.set('view engine', 'ejs')
+
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-  db.collection('quotes').find().toArray(function(err, results){
-    console.log(results);
+  db.collection('quotes').find().toArray((err, results) => {
+    if (err) return console.log(err)
+    //renders index.ejs
+    res.render('index.ejs', {quotes: results})
   })
 
 })
